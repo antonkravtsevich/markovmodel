@@ -8,7 +8,7 @@ short_words = ['но', 'и', 'не', 'как', 'так', 'в', 'из', 'по', '
                'некоторый', 'некоторая', 'некоторые', 'некоторых',
                'некоторыми', 'некоторым', 'на', 'что', 'а', 'ее', 'его', 'их',
                'вновь', 'своего', 'свой', 'своих', 'от', 'был', 'еще', '—',
-               'с', 'под', 'раз', 'из']
+               'с', 'под', 'раз', 'из', '–']
 
 
 def short_words_processing(str, words):
@@ -55,10 +55,12 @@ def get_data_from_file(filename):
 
 
 def main():
-    text = get_data_from_file('input')
+    text = get_data_from_file('games_of_thrones.txt')
     # print(text)
     prep = prepare_corpuse(text)
     mm1 = MarkovModel(prep)
+    print('unique words: '+str(mm1.types))
+    print('words: '+str(mm1.tokens))
     word = mm1.get_next_word('*START*')
     while word != '*END*':
         print(word, end=' ')
