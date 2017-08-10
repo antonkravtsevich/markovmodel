@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import re
+import codecs
 from markov import MarkovModel
+from hashable_list import HList
 import re
 
 
@@ -22,10 +24,13 @@ def short_words_processing(str, words):
 
 def prepare_words(str):
     str = str.strip(' ')
-    str = short_words_processing(str, short_words)
+    # str = short_words_processing(str, short_words)
     str = '*START* '+str+' *END*'
     return str.split(' ')
 
+def post_processing(str):
+    str = str.replace('_', ' ')
+    return str
 
 def prepare_corpuse(text):
     # to lowercase
@@ -52,21 +57,19 @@ def prepare_corpuse(text):
 
 
 def get_data_from_file(filename):
-    f = open(filename)
+    f = codecs.open(filename, 'r', 'utf-8')
     return f.read()
 
 
 def main():
     text = get_data_from_file('games_of_thrones.txt')
-    # print(text)
     prep = prepare_corpuse(text)
-    mm1 = MarkovModel(prep)
-    print('unique words: '+str(mm1.types))
-    print('words: '+str(mm1.tokens))
-    word = mm1.get_next_word('*START*')
-    while word != '*END*':
-        print(word, end=' ')
-        word = mm1.get_next_word(word)
+    
+    mm1 = MarkovModel(words=prep, window=3)
+
+    sentense = mm1.generate_sentense()
+    psentense = post_processing(sentense)
+    print(psentense)
 
 
 if __name__ == '__main__':
